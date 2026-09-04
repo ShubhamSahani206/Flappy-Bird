@@ -1,11 +1,12 @@
 let i=0, j=0;
 let body=document.querySelector("body");
+let fly=document.getElementById("fly");
+let pillars=[], pillarWidth=[], pillarbox=[];
 let pillarHeight;
-let trig=false;
-let pillars=[];
-let pillarWidth=[];//-----------NEW
 let latest=0;
-
+let trig=false;
+let flybox;
+let game=0;
 
 //---------------CREATING FIRST TWO PILLARS-------------------
 function createPillars(){
@@ -19,8 +20,10 @@ function createPillars(){
         position: absolute;
         left: 110vw;`;
     body.append(pillars[i]);
-
+    pillarbox.push(pillars[i].getBoundingClientRect());
     i++;
+
+
     pillars[i]=document.createElement("div");
     secondPillarHeight=100-(pillarHeight+30);
     pillars[i].style=
@@ -31,41 +34,47 @@ function createPillars(){
         top: ${pillarHeight+30}vh;
         left: 110vw;`;
     pillars[i-1].after(pillars[i]);
+    pillarbox.push(pillars[i].getBoundingClientRect());
     i++;
 
-    pillarWidth.push(110);//-----------NEW
-    pillarWidth.push(110);//-----------NEW
-
+    pillarWidth.push(110);
+    pillarWidth.push(110);
 }
 createPillars();
-//____________________________________________________________
+
 
 //--- MOVING BOTH PILLARS AND CREATING MORE PILLARS ------------------------------------
 function movePillars(){
 
-    for(let k=0; k<pillarWidth.length; k++){
-        pillarWidth[k]-=0.2;
+    for(let k=0; k<pillarWidth.length; k++){            //Reducing pillars' width
+            pillarWidth[k]-=0.2;
     }
 
-    for(let m=0; m<pillars.length; m+=2){
-    pillars[m].style.left=pillars[m+1].style.left=pillarWidth[m]+"vw";
+    for(let m=0; m<pillars.length; m+=2){               //Assigning pillars' width
+            pillars[m].style.left=pillars[m+1].style.left=pillarWidth[m]+"vw";
     }
 
+    latest=pillars.length-1;                //Create pillars on 75%
     if(pillarWidth[latest]<60){
-       latest+=2;
         createPillars();
     }
 
-    //-------------------Extra code to remove pillars which are out of screen------- 
-    // for(let n=0; n<pillars.length-1; n+=2){ 
-    //     if(pillarWidth[n]<-10){ 
-    //         pillars[n].remove(); 
-    //         pillars[n+1].remove(); 
-    //         pillars.splice(n, 2); 
-    //         pillarWidth.splice(n, 2); 
-    //     } 
-    // } 
-    //__________________________________________________________________________________
+    //-------------------Deleting Extra Pillars------------------------
+    for(let n=pillars.length-2; n>=0; n-=2){ 
+        if(pillarWidth[n]<-10){ 
+            pillars[n].remove(); 
+            pillars[n+1].remove(); 
+            pillars.splice(n, 2); 
+            pillarWidth.splice(n, 2); 
+            pillarbox.splice(n, 2);
+            i-=2;
+        } 
+    } 
+
+    //---------Calculating Bounds of all pillars-------------
+    for(let i=0; i<pillars.length; i++){
+        pillarbox[i]=pillars[i].getBoundingClientRect();
+    }
 
 }
 setInterval(movePillars, 10);
@@ -77,18 +86,35 @@ setInterval(movePillars, 10);
 //------------------------BEE-------------------------------
 let height=0;
 function moveBee(){
-    height+=0.5;
-    let fly=document.getElementById("fly");
+    flybox=fly.getBoundingClientRect();
+    
+    //-----------------COLLISION DETECTION----------------------
+    for(let i=0; i<pillarbox.length; i+=1){
+        if (!(flybox.top>pillarbox[i].bottom || 
+            flybox.bottom<pillarbox[i].top || 
+            flybox.left>pillarbox[i].right || 
+            flybox.right<pillarbox[i].left)){
+
+                if(game==0){
+                alert("Game Over");
+                game+=1;
+                }
+
+        }
+    }
+
+    //-----------------MOVING BEE-------------------------------
+    height+=0.25;
     fly.style.top=height+"vh";
     if(height>100){
         height=0;
     }
 }
-setInterval(moveBee, 20);
+setInterval(moveBee, 10);
 
 //-----------JUMP FUNCTION FOR BEE--------------
 let count=0;                                        
-let tap=()=>{                                       //creating lambda func tap 
+let jump=()=>{                                       //creating lambda func tap 
     let interval= setInterval(()=>{                 //lambda func interval which contains setInterval which runs functions after an interval of 10ms
         height-=1;                                     
         fly.style.top=height+"vh";                  //decreasing 1%
@@ -101,6 +127,6 @@ let tap=()=>{                                       //creating lambda func tap
     },10);
 }
 
-window.addEventListener("pointerdown",tap);             //Adding pointerdown event on window to click
+window.addEventListener("pointerdown",jump);             //Adding pointerdown event on window to click
 
-//__________________________________________________________
+//_________________________________________________________

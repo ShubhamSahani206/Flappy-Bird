@@ -1,22 +1,17 @@
 #fly{
-    height: 100px;
-    width:100px;
+    height: 45px;
+    width:40px;
     background:url(bee.png);
     background-size: contain;
     position: absolute;
     left:15vw;
     z-index: 3;
+    background-size: cover;
 }
 
 /*------------------Style for phone----------------------*/
 @media (max-width:480px){
-    #box1{
-    height:150px;
-    width: 30px;
-    background-color: red;
-    position: absolute;
-    left: 450px;
-}
+    
 #fly{
     height: 50px;
     width:50px;
