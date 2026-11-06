@@ -8,8 +8,22 @@
 </head>
 <body onkeydown="tap()">
     <div id="box1"></div>
-
     <div id="fly"></div>
+
+    <button onclick="startGame()" id="Playbtn">
+        <img src="Play-button.png"/>
+    </button>
+
+    <video  loop id="Background" disablePictureInPicture>
+        <source src="background.mp4" type="video/mp4">
+        </video>
+        <audio id="GameOverSound" src="gameOver.mpeg"></audio>
+        <div id="GameOver"> 
+            <p id="Game">
+                Game <p id="Over">Over
+                </p>
+            </p>            
+        </div>
 
     <script src="Flappy_bird.js"></script>
 </body>

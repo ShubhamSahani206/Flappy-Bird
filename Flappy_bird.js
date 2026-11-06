@@ -2,11 +2,13 @@ let i=0, j=0;
 let body=document.querySelector("body");
 let fly=document.getElementById("fly");
 let pillars=[], pillarWidth=[], pillarbox=[];
+let background=document.querySelector("#Background");
 let pillarHeight;
 let latest=0;
 let trig=false;
 let flybox;
 let game=0;
+let gameStarted=false;
 
 //---------------CREATING FIRST TWO PILLARS-------------------
 function createPillars(){
@@ -18,6 +20,7 @@ function createPillars(){
         width: 5vw;
         background-color: red;
         position: absolute;
+        z-index:3;
         left: 110vw;`;
     body.append(pillars[i]);
     pillarbox.push(pillars[i].getBoundingClientRect());
@@ -32,6 +35,7 @@ function createPillars(){
         background-color: red;
         position: absolute;
         top: ${pillarHeight+30}vh;
+        z-index:3;
         left: 110vw;`;
     pillars[i-1].after(pillars[i]);
     pillarbox.push(pillars[i].getBoundingClientRect());
@@ -46,7 +50,7 @@ createPillars();
 //--- MOVING BOTH PILLARS AND CREATING MORE PILLARS ------------------------------------
 function movePillars(){
 
-    for(let k=0; k<pillarWidth.length; k++){            //Reducing pillars' width
+    for(let k=0; k<pillarWidth.length; k++){            //Moving pillars to left by reducing their width
             pillarWidth[k]-=0.2;
     }
 
@@ -77,10 +81,21 @@ function movePillars(){
     }
 
 }
-setInterval(movePillars, 10);
 
 //__________________________________________________________________________________________
 
+
+function startGame(){                                     //Function to start the game
+    pillarsarerunning=setInterval(movePillars, 10);
+    beeismoving =setInterval(moveBee, 10);
+    window.addEventListener("pointerdown",jump);             //Adding pointerdown event on window to click
+
+    playbtn=document.querySelector("#Playbtn");
+    playbtn.style.display="none";
+    
+    background.play();
+    gameStarted=true;
+}
 
 
 //------------------------BEE-------------------------------
@@ -96,8 +111,14 @@ function moveBee(){
             flybox.right<pillarbox[i].left)){
 
                 if(game==0){
-                alert("Game Over");
+                let sound=document.querySelector("#GameOverSound").play()
+                background.pause();
+                clearInterval(beeismoving);
+                clearInterval(pillarsarerunning);
+                window.removeEventListener("pointerdown",jump);
+                document.querySelector("#GameOver").style.display="block";
                 game+=1;
+                ;
                 }
 
         }
@@ -110,7 +131,7 @@ function moveBee(){
         height=0;
     }
 }
-setInterval(moveBee, 10);
+
 
 //-----------JUMP FUNCTION FOR BEE--------------
 let count=0;                                        
@@ -127,6 +148,6 @@ let jump=()=>{                                       //creating lambda func tap
     },10);
 }
 
-window.addEventListener("pointerdown",jump);             //Adding pointerdown event on window to click
-
 //_________________________________________________________
+
+
