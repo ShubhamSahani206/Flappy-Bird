@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="Flappy_bird.css">
 </head>
 <body onkeydown="tap()">
+
     <div id="box1"></div>
     <div id="fly"></div>
 
@@ -17,13 +18,18 @@
     <video  loop id="Background" disablePictureInPicture>
         <source src="background.mp4" type="video/mp4">
         </video>
+
         <audio id="GameOverSound" src="gameOver.mpeg"></audio>
+        <audio id="TingSound" src="TingSound.mpeg"></audio>
+
         <div id="GameOver"> 
             <p id="Game">
-                Game <p id="Over">Over
-                </p>
+                Game <p id="Over">Over </p>
             </p>            
         </div>
+
+        <span id="Score">0</span>
+
 
     <script src="Flappy_bird.js"></script>
 </body>

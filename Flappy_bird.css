@@ -68,6 +68,15 @@ body{
     color: #ff3131;
 }
 
+#Score{
+    position: absolute;
+    left: 50%;
+    font-size: 100px;
+    font-family: "Archivo Black";
+    color: rgb(255, 255, 255);
+    z-index: 10;
+}
+
 /*------------------Style for phone----------------------*/
 @media (max-width:480px){
     

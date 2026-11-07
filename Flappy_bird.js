@@ -9,6 +9,10 @@ let trig=false;
 let flybox;
 let game=0;
 let gameStarted=false;
+let score=0;
+let crossingpillar=1;
+let timeBeeStaysInside=0;
+let ting = document.querySelector("#TingSound");
 
 //---------------CREATING FIRST TWO PILLARS-------------------
 function createPillars(){
@@ -17,6 +21,7 @@ function createPillars(){
     pillarHeight=Math.floor(Math.random()*(60-20+1))+20;
     pillars[i].style=
        `height:${pillarHeight}vh;
+        top: 0vh;
         width: 5vw;
         background-color: red;
         position: absolute;
@@ -118,11 +123,25 @@ function moveBee(){
                 window.removeEventListener("pointerdown",jump);
                 document.querySelector("#GameOver").style.display="block";
                 game+=1;
-                ;
                 }
 
         }
     }
+
+        //-----------------SCORE CALCULATION---------------------------------
+        if(flybox.right>pillarbox[1].left && flybox.left<pillarbox[1].right){
+            timeBeeStaysInside+=1;                                              //Calculating time bee stays inside the pillar, which is normally between 40-80
+
+            if(timeBeeStaysInside>50){
+            score+=1;
+            ting.play();
+            timeBeeStaysInside=0;                                               //Reset timeBeeStaysInside to calculate time for next pillar
+            }
+
+            document.querySelector("#Score").innerText=Math.floor(score);
+        }
+        //_________________SCORE CALCULATION ENDS_____________________________
+    
 
     //-----------------MOVING BEE-------------------------------
     height+=0.25;
@@ -141,7 +160,7 @@ let jump=()=>{                                       //creating lambda func tap
         fly.style.top=height+"vh";                  //decreasing 1%
         count++;                                        
 
-            if(count>20){
+            if(count>15){
                 clearInterval(interval);            //if setInterval ran 20 times then stop it
                 count=0;
             }
@@ -149,5 +168,3 @@ let jump=()=>{                                       //creating lambda func tap
 }
 
 //_________________________________________________________
-
-
