@@ -1,18 +1,23 @@
-let i=0, j=0;
+let i=0, j=0, latest=0, game=0, score=0, timeBeeStaysInside=0;
+let pillars=[], pillarWidth=[], pillarbox=[];
+let trig=false, gameStarted=false;
+let flybox, pillarHeight;
 let body=document.querySelector("body");
 let fly=document.getElementById("fly");
-let pillars=[], pillarWidth=[], pillarbox=[];
 let background=document.querySelector("#Background");
-let pillarHeight;
-let latest=0;
-let trig=false;
-let flybox;
-let game=0;
-let gameStarted=false;
-let score=0;
-let crossingpillar=1;
-let timeBeeStaysInside=0;
 let ting = document.querySelector("#TingSound");
+
+window.addEventListener("load",()=>{
+    if(window.innerWidth<500){
+        background.style.backgroundImage= "url('mountain.jpeg')";
+        background.style.backgroundSize="cover";
+        background.style.top="0";
+        background.style.left="0";
+    }
+    else{
+        background.src="background.mp4";
+    }
+})
 
 //---------------CREATING FIRST TWO PILLARS-------------------
 function createPillars(){
@@ -25,22 +30,21 @@ function createPillars(){
         width: 5vw;
         background-color: red;
         position: absolute;
-        z-index:3;
+        z-index:1;
         left: 110vw;`;
     body.append(pillars[i]);
     pillarbox.push(pillars[i].getBoundingClientRect());
     i++;
 
-
     pillars[i]=document.createElement("div");
-    secondPillarHeight=100-(pillarHeight+30);
+    let secondPillarHeight=100-(pillarHeight+30);
     pillars[i].style=
         `height:${secondPillarHeight}vh;
         width: 5vw;
         background-color: red;
         position: absolute;
         top: ${pillarHeight+30}vh;
-        z-index:3;
+        z-index:1;
         left: 110vw;`;
     pillars[i-1].after(pillars[i]);
     pillarbox.push(pillars[i].getBoundingClientRect());
