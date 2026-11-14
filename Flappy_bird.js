@@ -1,4 +1,4 @@
-let i=0, j=0, latest=0, game=0, score=0, timeBeeStaysInside=0;
+let i=0, j=0, latest=0, game=0, score=0, timeBeeStaysInside=0, levelCrossed=0;;
 let pillars=[], pillarWidth=[], pillarbox=[];
 let trig=false, gameStarted=false;
 let flybox, pillarHeight;
@@ -6,6 +6,8 @@ let body=document.querySelector("body");
 let fly=document.getElementById("fly");
 let background=document.querySelector("#Background");
 let ting = document.querySelector("#TingSound");
+let levels=[5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150];
+
 
 window.addEventListener("load",()=>{
     if(window.innerWidth<500){
@@ -111,6 +113,21 @@ function startGame(){                                     //Function to start th
 let height=0;
 function moveBee(){
     flybox=fly.getBoundingClientRect();
+
+    //-----------------SCORE CALCULATION---------------------------------
+        if(flybox.right>pillarbox[1].left && flybox.left<pillarbox[1].right){
+            timeBeeStaysInside+=1;                                              //Calculating time bee stays inside the pillar, which is normally between 40-80
+
+            if(timeBeeStaysInside>50){
+            score+=1;
+            ting.play();
+            timeBeeStaysInside=0;                                               //Reset timeBeeStaysInside to calculate time for next pillar
+            }
+
+            document.querySelector("#Score").innerText=Math.floor(score);
+        }
+        //_________________SCORE CALCULATION ENDS_____________________________
+
     
     //-----------------COLLISION DETECTION----------------------
     for(let i=0; i<pillarbox.length; i+=1){
@@ -127,25 +144,18 @@ function moveBee(){
                 window.removeEventListener("pointerdown",jump);
                 document.querySelector("#GameOver").style.display="block";
                 game+=1;
+                
+                let lastScore = localStorage.getItem("levelCrossed");
+                let currentScore = score;
+                if (currentScore>lastScore){
+                    levelCrossed=currentScore;
+                    localStorage.setItem("levelCrossed", levelCrossed);
+                }
+
                 }
 
         }
     }
-
-        //-----------------SCORE CALCULATION---------------------------------
-        if(flybox.right>pillarbox[1].left && flybox.left<pillarbox[1].right){
-            timeBeeStaysInside+=1;                                              //Calculating time bee stays inside the pillar, which is normally between 40-80
-
-            if(timeBeeStaysInside>50){
-            score+=1;
-            ting.play();
-            timeBeeStaysInside=0;                                               //Reset timeBeeStaysInside to calculate time for next pillar
-            }
-
-            document.querySelector("#Score").innerText=Math.floor(score);
-        }
-        //_________________SCORE CALCULATION ENDS_____________________________
-    
 
     //-----------------MOVING BEE-------------------------------
     height+=0.25;
